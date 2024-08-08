@@ -2,7 +2,7 @@
 
 import { auth, clerkClient } from "@clerk/nextjs/server";
 
-export const completeOnboarding = async (formData: FormData) => {
+export const completeOnboarding = async () => {
   const { userId } = auth();
 
   if (!userId) {
@@ -13,8 +13,6 @@ export const completeOnboarding = async (formData: FormData) => {
     const res = await clerkClient().users.updateUser(userId, {
       publicMetadata: {
         onboardingComplete: true,
-        applicationName: formData.get("applicationName"),
-        applicationType: formData.get("applicationType"),
       },
     });
     return { message: res.publicMetadata };

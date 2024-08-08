@@ -7,11 +7,18 @@ import { completeOnboarding } from "./_actions";
 
 export default function OnboardingComponent() {
   const [error, setError] = React.useState("");
+
+  const [userData, setUserData] = React.useState({
+    linkedin: "",
+    address: "",
+  });
   const { user } = useUser();
   const router = useRouter();
 
-  const handleSubmit = async (formData: FormData) => {
-    const res = await completeOnboarding(formData);
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    const res = await completeOnboarding();
+
     if (res?.message) {
       await user?.reload();
       router.push("/home");
@@ -23,17 +30,39 @@ export default function OnboardingComponent() {
   return (
     <div>
       <h1>Welcome</h1>
-      <form action={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div>
-          <label>Application Name</label>
-          <p>Enter the name of your application.</p>
-          <input type="text" name="applicationName" required />
+          <label>Address</label>
+          <p>Enter your Address.</p>
+          <textarea
+            name="address"
+            cols={30}
+            rows={10}
+            value={userData.address}
+            onChange={(event) => {
+              setUserData({
+                ...userData,
+                address: event.target.value,
+              });
+            }}
+          ></textarea>
         </div>
 
         <div>
-          <label>Application Type</label>
-          <p>Describe the type of your application.</p>
-          <input type="text" name="applicationType" required />
+          <label>Linkedin</label>
+          <p>Enter your linkedin URL</p>
+          <input
+            type="text"
+            name="linkedin"
+            value={userData.linkedin}
+            required
+            onChange={(event) => {
+              setUserData({
+                ...userData,
+                linkedin: event.target.value,
+              });
+            }}
+          />
         </div>
         {error && <p className="text-red-600">Error: {error}</p>}
         <button type="submit">Submit</button>
