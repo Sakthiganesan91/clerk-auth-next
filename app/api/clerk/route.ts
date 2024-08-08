@@ -71,10 +71,10 @@ export async function POST(req: Request) {
       photo: image_url,
     };
     console.log("Happening");
-    //   const newUser = await createUser(user);
+    const newUser = await createUser(user);
     console.log("Not Happening");
     // Set public metadata
-
+    console.log(newUser);
     await clerkClient.users.updateUserMetadata(id, {
       publicMetadata: {
         userId: id,
@@ -84,5 +84,33 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "OK user created" });
   }
 
-  return new Response("This is also working", { status: 200 });
+  // UPDATE
+  if (eventType === "user.updated") {
+    const { id, image_url, first_name, last_name, username } = evt.data;
+
+    const user = {
+      firstName: first_name,
+      lastName: last_name,
+      username: username!,
+      photo: image_url,
+    };
+
+    const updatedUser = await updateUser(id, user);
+
+    return NextResponse.json({ message: "OK", user: updatedUser });
+  }
+
+  // DELETE
+  if (eventType === "user.deleted") {
+    const { id } = evt.data;
+
+    const deletedUser = await deleteUser(id!);
+
+    return NextResponse.json({ message: "OK", user: deletedUser });
+  }
+
+  console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
+  console.log("Webhook body:", body);
+
+  return new Response("", { status: 200 });
 }
