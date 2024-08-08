@@ -11,11 +11,7 @@ const userSchema = new Schema({
     required: true,
     unique: true,
   },
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+
   photo: {
     type: String,
     required: true,
