@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     };
     console.log("Happening");
     const newUser = await createUser(user);
-    console.log("Not Happening");
+    console.log("Not");
     // Set public metadata
     console.log(newUser);
     await clerkClient.users.updateUserMetadata(id, {
