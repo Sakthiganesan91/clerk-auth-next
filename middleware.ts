@@ -3,7 +3,9 @@ import { NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher(["/home(.*)", "/"]);
 const isOnboardingRoute = createRouteMatcher(["/onboarding"]);
+const isPublicRoutes = createRouteMatcher(["/api/webhooks(.*)"]);
 export default clerkMiddleware((auth, req) => {
+  if (isPublicRoutes(req)) return NextResponse.next();
   if (isProtectedRoute(req)) auth().protect();
 
   const { userId, sessionClaims, redirectToSignIn } = auth();
